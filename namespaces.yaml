@@ -1,0 +1,15 @@
+# namespaces.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: app            # your 3 services live here
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring     # Prometheus + Grafana
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: argocd         # ArgoCD lives here

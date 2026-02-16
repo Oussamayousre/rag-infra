@@ -1,0 +1,12 @@
+# kind-cluster.yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      - containerPort: 80        # for Ingress
+        hostPort: 80
+      - containerPort: 443
+        hostPort: 443
+      - containerPort: 30080     # NodePort for ArgoCD
+        hostPort: 30080

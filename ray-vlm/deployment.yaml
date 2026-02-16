@@ -1,0 +1,34 @@
+# ray-vlm/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ray-vlm
+  namespace: app
+  labels:
+    app: ray-vlm
+    tier: backend
+spec:
+  replicas: 1                    # ← heavy model, probably 1 replica
+  selector:
+    matchLabels:
+      app: ray-vlm
+  template:
+    metadata:
+      labels:
+        app: ray-vlm
+        tier: backend
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: ray-vlm
+          image: ghcr.io/oussamayousre/ai-agent-multimodal-rag/ray-vlm:latest
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "2Gi"        # VLM needs more memory
+            limits:
+              cpu: "2"
+              memory: "4Gi"

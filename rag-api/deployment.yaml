@@ -1,0 +1,47 @@
+# rag-api/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rag-api
+  namespace: app
+  labels:
+    app: rag-api
+    tier: backend
+spec:
+  replicas: 2                    # ← SCALABILITY: run 2 pods
+  selector:
+    matchLabels:
+      app: rag-api
+  template:
+    metadata:
+      labels:
+        app: rag-api
+        tier: backend
+    spec:
+      imagePullSecrets:
+        - name: ghcr-secret
+      containers:
+        - name: rag-api
+          image: ghcr.io/oussamayousre/ai-agent-multimodal-rag/rag-api:latest
+          ports:
+            - containerPort: 8501
+          env:
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:        # ← SECRETS: pulled from K8s Secret
+                  name: openai-secret
+                  key: OPENAI_API_KEY
+            - name: MILVUS_HOST
+              value: "milvus-service.app.svc.cluster.local"  # ← SERVICE DISCOVERY
+            - name: RAY_VLM_HOST
+              value: "ray-vlm-service.app.svc.cluster.local"
+          resources:                 # ← RESOURCE LIMITS
+            requests:
+              cpu: "100m"            # minimum guaranteed
+              memory: "256Mi"
+            limits:
+              cpu: "500m"            # maximum allowed
+              memory: "512Mi"
+
+
+              # classic generated token for github , read packages write packages  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

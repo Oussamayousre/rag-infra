@@ -1,0 +1,34 @@
+# This is enough for your project
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: milvus
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: milvus
+  template:
+    metadata:
+      labels:
+        app: milvus
+    spec:
+      containers:
+        - name: milvus
+          image: milvusdb/milvus:v2.4.4
+          command: ["milvus", "run", "standalone"]
+          ports:
+            - containerPort: 19530
+          env:
+            - name: ETCD_USE_EMBED
+              value: "true"
+            - name: COMMON_STORAGETYPE
+              value: "local"
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/milvus
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: milvus-pvc
