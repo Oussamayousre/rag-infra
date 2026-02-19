@@ -22,7 +22,7 @@ spec:
         - name: ghcr-secret
       containers:
         - name: ray-vlm
-          image: ghcr.io/oussamayousre/ai-agent-multimodal-rag/ray-vlm:d3c88bbc0e0629788b679e65087c17a5ae2ef2f7
+          image: ghcr.io/oussamayousre/ai-agent-multimodal-rag/ray-vlm:f2401e6a55add00163400c97a689ca4da78b0f69
           ports:
             - containerPort: 8000
           resources:
