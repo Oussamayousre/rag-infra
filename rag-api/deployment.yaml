@@ -22,7 +22,7 @@ spec:
         - name: ghcr-secret
       containers:
         - name: rag-api
-          image: ghcr.io/oussamayousre/ai-agent-multimodal-rag/rag-api:f2401e6a55add00163400c97a689ca4da78b0f69
+          image: ghcr.io/oussamayousre/ai-agent-multimodal-rag/rag-api:9cf02601ba507ff742487ef64747ba65e5ae8171
           ports:
             - containerPort: 8501
           env:
