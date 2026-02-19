@@ -1,0 +1,32 @@
+# argocd/application.yaml
+# This tells ArgoCD: "Watch my infra repo and deploy everything in it to the cluster"
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: rag-app
+  namespace: argocd              # ArgoCD Applications always live in the argocd namespace
+spec:
+  project: default
+
+  # WHERE TO READ FROM (Git)
+  source:
+    repoURL: https://github.com/oussamayousre/rag-infra.git
+    targetRevision: main          # which branch to watch
+    path: .                       # watch the entire repo (all subdirectories)
+    directory:
+      recurse: true               # scan subdirectories (rag-api/, ray-vlm/, milvus/)
+      exclude: '{argocd/*,kind-cluster.yaml}'   # don't let ArgoCD manage itself — avoid loop
+
+  # WHERE TO DEPLOY TO (Kubernetes)
+  destination:
+    server: https://kubernetes.default.svc    # the local cluster ArgoCD is running in
+    namespace: app                             # deploy resources into the app namespace
+
+  # HOW TO SYNC
+  syncPolicy:
+    automated:
+      prune: true                 # delete resources that are removed from Git
+      selfHeal: true              # if someone manually changes something in cluster, revert it
+    syncOptions:
+      - CreateNamespace=true      # create the "app" namespace if it doesn't exist
